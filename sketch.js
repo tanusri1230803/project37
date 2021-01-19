@@ -14,13 +14,14 @@ function preload()
   //load images here
 sadDog = loadImage("Dog.png")
 happyDog = loadImage("dogImg1.png");
-bedroom = loadImage("Bed Room.png");
-garden = loadImage("Garden.png");
-washroom = loadImage("Wash Room.png");
+// bedroom = loadImage("Bed Room.png");
+// garden = loadImage("Garden.png");
+// washroom = loadImage("Wash Room.png");
 
 }
 
-function setup() {
+function setup() 
+{
   database = firebase.database();
   createCanvas(800,800);
 
@@ -29,16 +30,12 @@ function setup() {
   foodStock = database.ref('food');
   foodStock.on("value",readStock);
 
-  fedTime = database.ref('Feed Time');
-  fedTime.on("value",function(data){
-    LastFed = data.val();
-  });
-
+  
   //read gamestate from database
-  readState = database.ref('gameState');
-  readState.on("value",function(data){
-    gameState = data.val();
-  });
+  // readState = database.ref('gameState');
+  // readState.on("value",function(data){
+  //   gameState = data.val();
+  // });
 
   dog = createSprite(400,400,50,50);
   dog.addImage(sadDog);
@@ -60,43 +57,65 @@ function setup() {
 
     background("orange");
 
-    currentTime = hour();
-    if(currentTime === (lastFed + 1))
-    {
-      update("playing");
-      foodObj.garden();
-    }
-    else if(currentTime === (lastFed + 2)){
-        update("sleeping");
-        foodObj.bedroom();
-    }
-    else if(currentTime === (lastFed + 2) && currentTime <=(lastFed + 4))
-    {
-      update("bathing");
-      foodObj.washroom();
-    }
-    else{
-      update("hungry");
-      foodObj.display();
-      
-    }
+    foodObj.display();
 
-    if(gameState !== "hungry")
-  {
-    feed.hide();
-    addFood.hide();
-    dog.remove();
-  }else{
-    feed.show();
-    addFood.show();
+    // currentTime = hour();
+    // if(currentTime === (lastFed + 1))
+    // {
+    //   update("playing");
+    //   foodObj.garden();
+    // }
+    // else if(currentTime === (lastFed + 2)){
+    //     update("sleeping");
+    //     foodObj.bedroom();
+    // }
+    // else if(currentTime === (lastFed + 2) && currentTime <=(lastFed + 4))
+    // {
+    //   update("bathing");
+    //   foodObj.washroom();
+    // }
+    // else{
+    //   update("hungry");
+    //  
+      
+    // }
+
+  //   if(gameState !== "hungry")
+  // {
+  //   feed.hide();
+  //   addFood.hide();
+  //   dog.remove();
+  // }else{
+  //   feed.show();
+  //   addFood.show();
     // dog.addImage(sadDog);
 
-  }
+  //}
 
-  // textSize(20);
-  // stroke("green");
-  // fill("yellow");
-  // text("foodStock "+foodStock,670,50);
+  textSize(20);
+  stroke("green");
+  fill("yellow");
+  text("foodStock "+foodS,670,50);
+
+  fedTime = database.ref('Feed Time');
+  fedTime.on("value",function(data){
+    LastFed = data.val();
+  });
+
+
+  fill(255,255,254);
+  textSize(15);
+  if(lastFed >= 12)
+  {
+    text("Last Fed : "+lastFed%12 + "PM", 350,30);
+  }
+  else if(lastFed === 0){
+
+    text("lastFed : 12 AM",350,30);
+  }
+  else{
+    text("Last Feed : " + lastFed + "AM",350,30);
+  }
 
   drawSprites();
 
@@ -124,16 +143,16 @@ function setup() {
   {
     foodS++;
     database.ref('/').update({
-      Food :  foodS
+      Food :foodS
     })
   }
 
-  function update(state)
-  {
-     database.ref('/').update({
-      gameState : state
-    });
-  }
+  // function update(state)
+  // {
+  //    database.ref('/').update({
+  //     gameState : state
+  //   });
+  // }
  
    // if(keyWentDown(UP_ARROW))
     // {
